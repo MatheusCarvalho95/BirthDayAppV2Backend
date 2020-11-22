@@ -8,9 +8,13 @@ import DashController from "./controller/DashController"
 
 import authMiddleware from './middleware/authmiddleware'
 
+const cors = require ('cors');
 
 const app = express();
+app.use(cors())
 app.use(express.json());
+
+
 app.post("/user", UserController.store)
 
 app.post("/login", LoginController.login, (req,res) => {

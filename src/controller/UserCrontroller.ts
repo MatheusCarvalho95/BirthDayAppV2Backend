@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import * as bcrypt from "bcrypt"
-import {getRepository,createConnection} from 'typeorm';
+import {getRepository,createConnection,getConnectionManager} from 'typeorm';
 
 import {User} from '../entity/User';
 
@@ -13,7 +13,13 @@ async function HashPassword(pass) {
 
 class UserController {
     async store (req:Request, res: Response){
-        await createConnection()
+        
+
+        const ConnectionManager = getConnectionManager()
+        if(!ConnectionManager.has("default")){
+            await createConnection() 
+        }
+
         const repository = getRepository(User);
         const {username, email, plainpassword } = req.body;
         

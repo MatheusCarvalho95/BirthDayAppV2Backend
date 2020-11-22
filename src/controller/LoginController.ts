@@ -1,5 +1,5 @@
 import {Request, Response, Next} from "express";
-import {getRepository,createConnection} from "typeorm";
+import {getRepository,createConnection, getConnectionManager} from "typeorm";
 
 import * as bcrypt from "bcrypt";
 
@@ -9,7 +9,13 @@ import {User} from "../entity/User"
 
 class LoginController {
     async login(req:Request, res: Response, Next: Next){
-        await createConnection()
+        
+        const ConnectionManager = getConnectionManager()
+        if(!ConnectionManager.has("default")){
+            await createConnection() 
+        }
+
+       
         const repository = getRepository(User);
 
         const {email, password} = req.body;
